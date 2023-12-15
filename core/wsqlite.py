@@ -4,7 +4,8 @@ import pandas as pd
 def query(settings):
     conn = sqlite3.connect('sqlite.db')
     cur = conn.cursor()
-    cur.execute(f"SELECT name FROM sqlite_schema WHERE type='table' AND name=\"{settings['DATABASE_NAME']}\";")
+    DB_NAME = settings["DATABASE_NAME"]
+    cur.execute(f"SELECT name FROM sqlite_schema WHERE type='table' AND name=\"{DB_NAME}\";")
     table_exists = cur.fetchall()
     if not(len(table_exists)):
         data = pd.read_csv(settings["DATAPATH"] + settings["FILENAME"])
@@ -24,9 +25,9 @@ def query(settings):
         if (query == str(1)):
             for i in range(settings["NUM_OF_TESTS"]):
                 start_time = time.time()
-                cur.execute("""
+                cur.execute(f"""
                                 SELECT cab_type, count(*) 
-                                FROM trips GROUP BY 1;
+                                FROM {DB_NAME} GROUP BY 1;
                                 """)
                 end_time = time.time()
                 sum = sum + (end_time - start_time)
@@ -34,9 +35,9 @@ def query(settings):
         elif (query == str(2)):
             for i in range(settings["NUM_OF_TESTS"]):
                 start_time = time.time()
-                cur.execute("""
+                cur.execute(f"""
                                 SELECT passenger_count, avg(total_amount) 
-                                FROM trips
+                                FROM {DB_NAME}
                                 GROUP BY 1;
                                 """)
                 end_time = time.time()
@@ -45,12 +46,12 @@ def query(settings):
         elif (query == str(3)):
             for i in range(settings["NUM_OF_TESTS"]):
                 start_time = time.time()
-                cur.execute("""
+                cur.execute(f"""
                                 SELECT
                                 passenger_count, 
                                 STRFTIME('%Y', "tpep_pickup_datetime"),
                                 count(*)
-                                FROM trips
+                                FROM {DB_NAME}
                                 GROUP BY 1, 2;
                                 """)
                 end_time = time.time()
@@ -59,13 +60,13 @@ def query(settings):
         elif (query == str(4)):
             for i in range(settings["NUM_OF_TESTS"]):
                 start_time = time.time()
-                cur.execute("""
+                cur.execute(f"""
                                 SELECT
                                 passenger_count,
                                 STRFTIME('%Y', "tpep_pickup_datetime"),
                                 round(trip_distance),
                                 count(*)
-                                FROM trips  
+                                FROM {DB_NAME} 
                                 GROUP BY 1, 2, 3
                                 ORDER BY 2, 4 desc;
                                 """)

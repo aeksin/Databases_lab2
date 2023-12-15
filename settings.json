@@ -1,7 +1,7 @@
 {
   "DATAPATH": "sources/",
-  "FILENAME": "nyc_yellow_tiny.csv",
-  "DATABASE_NAME": "trips2",
+  "FILENAME": "large_df.csv",
+  "DATABASE_NAME": "trips",
   "LIBRARIES": [
     "psycopg2",
     "DuckDB",
@@ -15,5 +15,10 @@
     "3",
     "4"
   ],
+  "PSQL_USERNAME": "postgres",
+  "PSQL_PASSWORD": "12345",
+  "PSQL_HOSTNAME": "localhost",
+  "PSQL_PORT": "5432",
+  "PSQL_DBNAME": "postgres",
   "NUM_OF_TESTS": 20
 }

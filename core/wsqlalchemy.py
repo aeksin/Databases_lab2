@@ -2,7 +2,7 @@ from sqlalchemy import create_engine,orm, text
 import pandas as pd
 import time
 def query(settings):
-    engine = create_engine('postgresql://postgres:12345@localhost:5432/postgres')
+    engine = create_engine(f'postgresql://{settings["PSQL_USERNAME"]}:{settings["PSQL_PASSWORD"]}@{settings["PSQL_HOSTNAME"]}:{settings["PSQL_PORT"]}/{settings["PSQL_DBNAME"]}')
     cur = orm.sessionmaker(bind=engine)()
 
     DB_NAME = settings["DATABASE_NAME"]
@@ -28,9 +28,9 @@ def query(settings):
         if (query == str(1)):
             for i in range(settings["NUM_OF_TESTS"]):
                 start_time = time.time()
-                cur.execute(text("""
+                cur.execute(text(f"""
                                 SELECT cab_type, count(*) 
-                                FROM trips GROUP BY 1;
+                                FROM {DB_NAME} GROUP BY 1;
                                 """))
                 end_time = time.time()
                 sum = sum + (end_time - start_time)
@@ -38,9 +38,9 @@ def query(settings):
         elif (query == str(2)):
             for i in range(settings["NUM_OF_TESTS"]):
                 start_time = time.time()
-                cur.execute(text("""
+                cur.execute(text(f"""
                                 SELECT passenger_count, avg(total_amount) 
-                                FROM trips
+                                FROM {DB_NAME}
                                 GROUP BY 1;
                                 """))
                 end_time = time.time()
@@ -49,12 +49,12 @@ def query(settings):
         elif (query == str(3)):
             for i in range(settings["NUM_OF_TESTS"]):
                 start_time = time.time()
-                cur.execute(text("""
+                cur.execute(text(f"""
                                 SELECT
                                 passenger_count, 
                                 extract(year from tpep_pickup_datetime),
                                 count(*)
-                                FROM trips
+                                FROM {DB_NAME}
                                 GROUP BY 1, 2;
                                 """))
                 end_time = time.time()
@@ -63,13 +63,13 @@ def query(settings):
         elif (query == str(4)):
             for i in range(settings["NUM_OF_TESTS"]):
                 start_time = time.time()
-                cur.execute(text("""
+                cur.execute(text(f"""
                                 SELECT
                                 passenger_count,
                                 extract(year from tpep_pickup_datetime),
                                 round(trip_distance),
                                 count(*)
-                                FROM trips  
+                                FROM {DB_NAME} 
                                 GROUP BY 1, 2, 3
                                 ORDER BY 2, 4 desc;
                                 """))
