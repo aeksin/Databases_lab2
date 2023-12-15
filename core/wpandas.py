@@ -12,6 +12,7 @@ def query(settings):
         print('modification is completed')
         try:
             data.to_pickle(settings['DATABASE_NAME']+".pkl")
+            print("database created")
         except:
             print(f'database with name \'{settings["DATABASE_NAME"]}\' already exists or something went wrong')
     data = pd.read_pickle(settings['DATABASE_NAME'] + ".pkl")

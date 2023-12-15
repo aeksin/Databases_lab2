@@ -21,6 +21,7 @@ def query(settings):
         print('modification is completed')
         try:
             data.to_sql(settings['DATABASE_NAME'], engine, if_exists='fail',chunksize=10000, index=False)
+            print("database created")
         except:
             print(f'database with name \'{settings["DATABASE_NAME"]}\' already exists or something went wrong')
     f = open("result.txt","a")

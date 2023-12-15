@@ -1,7 +1,7 @@
 {
   "DATAPATH": "sources/",
-  "FILENAME": "large_df.csv",
-  "DATABASE_NAME": "trips",
+  "FILENAME": "nyc_yellow_tiny.csv",
+  "DATABASE_NAME": "trips2",
   "LIBRARIES": [
     "psycopg2",
     "DuckDB",

@@ -1,8 +1,26 @@
 from sqlalchemy import create_engine,orm, text
+import pandas as pd
 import time
 def query(settings):
     engine = create_engine('postgresql://postgres:12345@localhost:5432/postgres')
     cur = orm.sessionmaker(bind=engine)()
+
+    DB_NAME = settings["DATABASE_NAME"]
+    table_exists = cur.execute(text(f"SELECT EXISTS(SELECT FROM pg_tables WHERE schemaname = \'public\' AND tablename = \'{DB_NAME}\')"))
+    table_exists = table_exists.fetchone()[0]
+    if not (table_exists):
+        data = pd.read_csv(settings['DATAPATH'] + settings['FILENAME'])
+        data = data.drop(columns=data.columns[0], axis=1)
+        data = data.rename(columns={'VendorID': 'cab_type'})
+        data['tpep_pickup_datetime'] = pd.to_datetime(data['tpep_pickup_datetime'])
+        print('modification is completed')
+        try:
+            data.to_sql(settings['DATABASE_NAME'], engine, if_exists='fail', chunksize=10000, index=False)
+            print("database created")
+        except:
+            print(f'database with name \'{settings["DATABASE_NAME"]}\' already exists or something went wrong')
+
+
     f = open("result.txt", "a")
     f.seek(0, 2)
     for query in settings["QUERIES"]:
