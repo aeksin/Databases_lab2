@@ -1,0 +1,19 @@
+{
+  "DATAPATH": "sources/",
+  "FILENAME": "large_df.csv",
+  "DATABASE_NAME": "trips",
+  "LIBRARIES": [
+    "psycopg2",
+    "DuckDB",
+    "SQLite",
+    "Pandas",
+    "SQLAlchemy"
+  ],
+  "QUERIES": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "NUM_OF_TESTS": 20
+}
